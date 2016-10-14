@@ -32,7 +32,5 @@
     "rollup": "^0.36.3",
     "xo": "^0.17.0"
   },
-  "dependencies": {
-    "map-obj": "^2.0.0"
-  }
+  "dependencies": {}
 }

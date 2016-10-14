@@ -2,6 +2,15 @@ import test from 'ava';
 
 const privates = new WeakMap();
 
+const fieldsApplyer = name => {
+	return function (...methodArgs) {
+		const fields = privates.get(this);
+		return fields[name](...methodArgs);
+	};
+};
+
+const fieldProp = name => ({[name]: fieldsApplyer(name)});
+
 function priv(Class) {
 	function Privatized(...args) {
 		const fields = new Class(...args);
@@ -10,10 +19,7 @@ function priv(Class) {
 
 	const methods = Object.getOwnPropertyNames(Class.prototype)
 		.filter(p => p !== 'constructor')
-		.map(name => ({[name]: function (...methodArgs) {
-			const fields = privates.get(this);
-			return fields[name](...methodArgs);
-		}}))
+		.map(fieldProp)
 		.concat({constructor: Privatized});
 
 	Privatized.prototype = Object.assign(...methods);
@@ -35,6 +41,17 @@ const Person = priv(class Person {
 		return this._name;
 	}
 
+	static Protected() {
+		return {
+			setAge(value) {
+				this._age = value;
+			},
+
+			setName(value) {
+				this._name = value;
+			}
+		};
+	}
 });
 
 test('classes could be instantiated', t => {
