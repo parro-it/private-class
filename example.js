@@ -1,4 +1,4 @@
-import $package_var from '$package_name';
+import privateClass from 'private-class';
 
-console.log({$package_var});
+console.log({privateClass});
 

@@ -1,7 +1,0 @@
-ava
-babel-plugin-transform-es2015-modules-commonjs
-babel-register
-coveralls
-nyc
-rollup
-xo

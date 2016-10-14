@@ -1,3 +1,3 @@
-export default function $package_var() {
+export default function privateClass() {
 	return 42;
 }
