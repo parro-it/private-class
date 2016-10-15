@@ -1,31 +1,5 @@
 import test from 'ava';
-
-const privates = new WeakMap();
-
-const fieldsApplyer = name => {
-	return function (...methodArgs) {
-		const fields = privates.get(this);
-		return fields[name](...methodArgs);
-	};
-};
-
-const fieldProp = name => ({[name]: fieldsApplyer(name)});
-
-function priv(Class) {
-	function Privatized(...args) {
-		const fields = new Class(...args);
-		privates.set(this, fields);
-	}
-
-	const methods = Object.getOwnPropertyNames(Class.prototype)
-		.filter(p => p !== 'constructor')
-		.map(fieldProp)
-		.concat({constructor: Privatized});
-
-	Privatized.prototype = Object.assign(...methods);
-
-	return Privatized;
-}
+import priv from './main';
 
 const Person = priv(class Person {
 	constructor(name, age) {
@@ -33,31 +7,60 @@ const Person = priv(class Person {
 		this._age = age;
 	}
 
-	age() {
+	get age() {
 		return this._age;
+	}
+
+	set age(value) {
+		this._age = value;
 	}
 
 	name() {
 		return this._name;
 	}
-
-	static Protected() {
-		return {
-			setAge(value) {
-				this._age = value;
-			},
-
-			setName(value) {
-				this._name = value;
-			}
-		};
-	}
 });
 
 test('classes could be instantiated', t => {
 	const p = new Person('Andrea', 40);
+	t.is(typeof p, 'object');
+	t.false(p === null);
+});
+
+test('public function are visible', t => {
+	const p = new Person('Andrea', 40);
+	t.is(typeof p.name, 'function');
+});
+
+test('public getter are visible', t => {
+	const p = new Person('Andrea', 40);
+	t.is(p.age, 40);
+});
+
+test('public setter are visible', t => {
+	const p = new Person('Andrea', 40);
+	p.age = 41;
+	t.is(p.age, 41);
+});
+
+test('public function can read private fields', t => {
+	const p = new Person('Andrea', 40);
 	t.is(p.name(), 'Andrea');
-	t.is(p.age(), 40);
-	t.is(p._age, undefined);
+});
+
+test('extern code can not read private fields', t => {
+	const p = new Person('Andrea', 40);
 	t.is(p._name, undefined);
+});
+
+test('public function names are preserved', t => {
+	const p = new Person('Andrea', 40);
+	t.is(p.name.name, 'name');
+});
+
+test('Class name is preserved', t => {
+	t.is(Person.name, 'Person');
+});
+
+test('constructor is preserved', t => {
+	t.is(Person.prototype.constructor, Person);
 });

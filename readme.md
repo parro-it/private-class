@@ -2,21 +2,52 @@
 
 > Private fields in js classes
 
-background details relevant to understanding what this module does
+This module allow to protected private fields of youtr classes.
+
 
 ## Usage
 
-description of the example
-
 ```js
-const privateClass = require('private-class');
+const priv = require('private-class');
 
-console.log({privateClass});
-```
+const Person = priv(class Person {
+	constructor(name, age) {
+		this._name = name;
+		this._age = age;
+	}
 
-This will output
+	get age() {
+		return this._age;
+	}
 
-```
+	set age(value) {
+		this._age = value;
+	}
+
+	name() {
+		return this._name;
+	}
+});
+
+const p = new Person('Andrea', 40);
+// public function are visible
+console.log(typeof p.name);
+// <-- function
+
+// public getter & setter are visible
+p.age = 41;
+console.log(p.age);
+// <-- 41
+
+// public function can read private fields
+console.log(p.name());
+// <-- Andrea
+
+// extern code can not read private fields
+console.log(p._name);
+// <-- undefined
+console.log(p._age);
+// <-- undefined
 ```
 
 [![Travis Build Status](https://img.shields.io/travis/parro-it/private-class/master.svg)](http://travis-ci.org/parro-it/private-class)
@@ -28,10 +59,10 @@ This will output
 ## API
 
 ```js
-const privateClass = (): object
+const privateClass = (Class: function): function
 ```
 
-description of the function signature
+Given a class, return a new class that doesn't allow to access private properties.
 
 ## Install
 

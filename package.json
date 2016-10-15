@@ -15,13 +15,14 @@
     "cover-test": "nyc ava --require babel-register && xo --ignore example.js --ignore index.js",
     "cover-publish": "nyc report --reporter=text-lcov | coveralls"
   },
-  "keywords": [],
+  "keywords": ["private", "class", "visibility", "fields", "field", "property"],
   "tonicExampleFilename": "example.js",
   "babel": {
     "plugins": [
       "transform-es2015-modules-commonjs"
     ]
   },
+  "engines" : { "node" : ">=6" },
   "jsnext:main": "main.js",
   "devDependencies": {
     "ava": "^0.16.0",
