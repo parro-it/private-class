@@ -2,8 +2,11 @@
 
 > Private fields in js classes
 
-This module allow to protected private fields of youtr classes.
+This module allow to protected private properties of classes.
 
+It work by creating a new prototype that wrap each methods of the original one.
+
+On creation of a new instance of the wrapped prototype, a new instance of the original class is created and saved in a WeakMap. Wrapped methods retrieve the original class instance from there and forward the class to its methods.
 
 ## Usage
 
