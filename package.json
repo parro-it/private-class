@@ -1,6 +1,6 @@
 {
   "name": "private-class",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Private fields in js classes",
   "repository": "parro-it/private-class",
   "author": "Andrea <andrea@parro.it>",
